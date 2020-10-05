@@ -15,7 +15,7 @@ This is where the Dockerfiles for the ETOS test runner is located.
 Contribute
 ==========
 
-- Issue Tracker: https://github.com/eiffel-community/etos-test-runner-containers/issues
+- Issue Tracker: https://github.com/eiffel-community/etos/issues
 - Source Code: https://github.com/eiffel-community/etos-test-runner-containers
 
 
