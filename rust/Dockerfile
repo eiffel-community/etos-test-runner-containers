@@ -1,5 +1,5 @@
 ARG DEBIAN_RELEASE=buster
-FROM registry.nordix.org/eiffel-playground/etos_base_test_runner:$DEBIAN_RELEASE
+FROM registry.nordix.org/eiffel-playground/etos-base-test-runner:$DEBIAN_RELEASE
 
 ARG RUST_VERSION
 RUN /usr/bin/curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain $RUST_VERSION
