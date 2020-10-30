@@ -1,5 +1,5 @@
 ARG DEBIAN_RELEASE=buster
-FROM registry.nordix.org/eiffel-playground/etos-base-test-runner:$DEBIAN_RELEASE
+FROM registry.nordix.org/eiffel/etos-base-test-runner:$DEBIAN_RELEASE
 
 ARG GO_VERSION
 USER root
