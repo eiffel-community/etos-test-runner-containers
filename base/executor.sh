@@ -8,7 +8,8 @@ pyenv shell $ETR_PYTHON_VERSION
 DEV=${DEV:-false}
 if [ $DEV = "true" ] ; then
     ETR_BRANCH=${ETR_BRANCH:-master}
-    ETR_INSTALL="git+https://github.com/eiffel-community/etos-test-runner.git@$ETR_BRANCH"
+    ETR_REPOSITORY=${ETR_REPOSITORY:-https://github.com/eiffel-community/etos-test-runner.git}
+    ETR_INSTALL="git+$ETR_REPOSITORY@$ETR_BRANCH"
 else
     ETR_INSTALL="etos_test_runner"
 fi
