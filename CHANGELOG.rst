@@ -2,6 +2,14 @@
 Changelog
 =========
 
+Version 1.3.0
+-------------
+
+- b6740aa Upgrade ETR container to python 3.9.0 (#11)
+- f028c56 Change to use images from 'eiffel' instead of playground (#12)
+- 099c44b Add ability to choose repository when running with DEV=true (#10)
+- 2b71c6b Go: Pipe compiler tarball to tar instead of saving it to disk (#9)
+
 Version 1.2.0
 -------------
 
