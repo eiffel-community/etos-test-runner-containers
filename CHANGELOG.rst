@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 1.16.1
+--------------
+
+- e9338e0 Revert "Adding changelog for version 1.16.0"
+- bd7ba7f Adding changelog for version 1.16.0
+
 Version 1.15.0
 --------------
 
