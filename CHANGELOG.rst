@@ -5,6 +5,11 @@ Changelog
 Version 1.21.0
 --------------
 
+- 7495347 Adding changelog for version 1.21.0
+
+Version 1.21.0
+--------------
+
 
 Version 1.20.0
 --------------
