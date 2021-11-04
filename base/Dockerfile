@@ -7,7 +7,7 @@ ENV ETR_PYTHON_VERSION=3.9.0
 USER root
 
 ENV PYENV_ROOT=/home/etos/.pyenv
-ENV PATH="/home/etos/.pyenv/bin:${PATH}"
+ENV PATH="/home/etos/.pyenv/shims:/home/etos/.pyenv/bin:${PATH}"
 ENV TEST_ARTIFACT_PATH /home/etos/artifacts
 ENV GLOBAL_ARTIFACT_PATH /home/etos/global
 ENV TEST_LOCAL_PATH /home/etos/local
