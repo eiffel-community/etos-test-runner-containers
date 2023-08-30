@@ -24,10 +24,12 @@ RUN apt-get update -y && \
 USER etos
 WORKDIR /home/etos
 
+# hadolint ignore=DL3013
 RUN echo "eval \"\$(pyenv init -)\"" >> /home/etos/.bashrc && \
     git clone https://github.com/pyenv/pyenv.git /home/etos/.pyenv && \
     pyenv install $ETR_PYTHON_VERSION && \
-    pyenv global $ETR_PYTHON_VERSION
+    pyenv global $ETR_PYTHON_VERSION && \
+	pip install --no-cache-dir -U pip
 
 COPY executor.sh /home/etos/executor.sh
 ENTRYPOINT ["/home/etos/executor.sh"]
