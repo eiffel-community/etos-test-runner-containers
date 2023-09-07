@@ -18,10 +18,18 @@ jobs:
       # Checks-out your repository under , so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Run hadolint for Base testrunner
+      - name: Run hadolint for Base testrunner buster
         uses: hadolint/hadolint-action@master
         with:
-          dockerfile: base/Dockerfile
+          dockerfile: base/Dockerfile.buster
+      - name: Run hadolint for Base testrunner bullseye
+        uses: hadolint/hadolint-action@master
+        with:
+          dockerfile: base/Dockerfile.bullseye
+      - name: Run hadolint for Base testrunner bookworm
+        uses: hadolint/hadolint-action@master
+        with:
+          dockerfile: base/Dockerfile.bookworm
       - name: Run hadolint for Go
         uses: hadolint/hadolint-action@master
         with:

@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 ENV ETOS_CONTEXT="ETR"
 ENV ETR_PYTHON_VERSION=3.9.0
