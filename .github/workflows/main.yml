@@ -55,18 +55,29 @@ jobs:
           - dockerfile: base/Dockerfile.bookworm
             tag: bookworm
             context: base
+            build_args: ""
           - dockerfile: base/Dockerfile.bullseye
             tag: bullseye
             context: base
+            build_args: ""
           - dockerfile: python/Dockerfile
             tag: python
             context: python
+            build_args: |
+              DEBIAN_RELEASE=bookworm
+              PYTHON_VERSION=3.13
           - dockerfile: go/Dockerfile
             tag: go
             context: go
+            build_args: |
+              DEBIAN_RELEASE=bookworm
+              GO_VERSION=1.25.0
           - dockerfile: rust/Dockerfile
             tag: rust
             context: rust
+            build_args: |
+              DEBIAN_RELEASE=bookworm
+              RUST_VERSION=1.90.0
 
     steps:
       - name: Checkout repository
@@ -98,3 +109,4 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: ${{ matrix.build_args }}
