@@ -39,11 +39,41 @@ jobs:
         with:
           dockerfile: rust/Dockerfile
 
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      bookworm: ${{ steps.changes.outputs.bookworm }}
+      bullseye: ${{ steps.changes.outputs.bullseye }}
+      python: ${{ steps.changes.outputs.python }}
+      go: ${{ steps.changes.outputs.go }}
+      rust: ${{ steps.changes.outputs.rust }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Check for changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            bookworm:
+              - 'base/Dockerfile.bookworm'
+            bullseye:
+              - 'base/Dockerfile.bullseye'
+            python:
+              - 'python/Dockerfile'
+              - 'base/Dockerfile.bookworm'
+            go:
+              - 'go/Dockerfile'
+              - 'base/Dockerfile.bookworm'
+            rust:
+              - 'rust/Dockerfile'
+              - 'base/Dockerfile.bookworm'
+
   build-and-push:
     # Only run on push to main branch (PR merges)
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: run-hadolint
+    needs: [run-hadolint, check-changes]
 
     permissions:
       contents: read
@@ -56,35 +86,42 @@ jobs:
             tag: bookworm
             context: base
             build_args: ""
+            should_build: ${{ needs.check-changes.outputs.bookworm == 'true' }}
           - dockerfile: base/Dockerfile.bullseye
             tag: bullseye
             context: base
             build_args: ""
+            should_build: ${{ needs.check-changes.outputs.bullseye == 'true' }}
           - dockerfile: python/Dockerfile
             tag: python
             context: python
             build_args: |
               DEBIAN_RELEASE=bookworm
               PYTHON_VERSION=3.13
+            should_build: ${{ needs.check-changes.outputs.python == 'true' }}
           - dockerfile: go/Dockerfile
             tag: go
             context: go
             build_args: |
               DEBIAN_RELEASE=bookworm
               GO_VERSION=1.25.0
+            should_build: ${{ needs.check-changes.outputs.go == 'true' }}
           - dockerfile: rust/Dockerfile
             tag: rust
             context: rust
             build_args: |
               DEBIAN_RELEASE=bookworm
               RUST_VERSION=1.90.0
+            should_build: ${{ needs.check-changes.outputs.rust == 'true' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        if: matrix.should_build
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
+        if: matrix.should_build
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -92,6 +129,7 @@ jobs:
 
       - name: Extract metadata
         id: meta
+        if: matrix.should_build
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/eiffel-community/etos-base-test-runner
@@ -100,9 +138,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        if: matrix.should_build
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
+        if: matrix.should_build
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
