@@ -1,5 +1,5 @@
-ARG DEBIAN_RELEASE=buster
-FROM registry.nordix.org/eiffel/etos-base-test-runner:$DEBIAN_RELEASE
+ARG DEBIAN_RELEASE=bookworm
+FROM ghcr.io/eiffel-community/etos-base-test-runner:$DEBIAN_RELEASE
 
 ARG RUST_VERSION
 # hadolint ignore=DL4006
