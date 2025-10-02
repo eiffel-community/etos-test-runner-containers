@@ -18,10 +18,6 @@ jobs:
       # Checks-out your repository under , so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Run hadolint for Base testrunner buster
-        uses: hadolint/hadolint-action@master
-        with:
-          dockerfile: base/Dockerfile.buster
       - name: Run hadolint for Base testrunner bullseye
         uses: hadolint/hadolint-action@master
         with:
