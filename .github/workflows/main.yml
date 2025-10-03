@@ -85,33 +85,22 @@ jobs:
           - dockerfile: base/Dockerfile.bookworm
             tag: bookworm
             context: base
-            build_args: ""
             should_build: ${{ needs.check-changes.outputs.bookworm == 'true' }}
           - dockerfile: base/Dockerfile.bullseye
             tag: bullseye
             context: base
-            build_args: ""
             should_build: ${{ needs.check-changes.outputs.bullseye == 'true' }}
           - dockerfile: python/Dockerfile
             tag: python
             context: python
-            build_args: |
-              DEBIAN_RELEASE=bookworm
-              PYTHON_VERSION=3.13
             should_build: ${{ needs.check-changes.outputs.python == 'true' }}
           - dockerfile: go/Dockerfile
             tag: go
             context: go
-            build_args: |
-              DEBIAN_RELEASE=bookworm
-              GO_VERSION=1.25.0
             should_build: ${{ needs.check-changes.outputs.go == 'true' }}
           - dockerfile: rust/Dockerfile
             tag: rust
             context: rust
-            build_args: |
-              DEBIAN_RELEASE=bookworm
-              RUST_VERSION=1.90.0
             should_build: ${{ needs.check-changes.outputs.rust == 'true' }}
 
     steps:
