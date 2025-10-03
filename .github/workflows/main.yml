@@ -48,6 +48,7 @@ jobs:
     outputs:
       bookworm: ${{ steps.changes.outputs.bookworm }}
       bullseye: ${{ steps.changes.outputs.bullseye }}
+      trixie: ${{ steps.changes.outputs.trixie }}
       python: ${{ steps.changes.outputs.python }}
       go: ${{ steps.changes.outputs.go }}
       rust: ${{ steps.changes.outputs.rust }}
@@ -63,6 +64,8 @@ jobs:
               - 'base/Dockerfile.bookworm'
             bullseye:
               - 'base/Dockerfile.bullseye'
+            trixie:
+              - 'base/Dockerfile.trixie'
             python:
               - 'python/Dockerfile'
               - 'base/Dockerfile.bookworm'
@@ -94,6 +97,10 @@ jobs:
             tag: bullseye
             context: base
             should_build: ${{ needs.check-changes.outputs.bullseye == 'true' }}
+          - dockerfile: base/Dockerfile.trixie
+            tag: trixie
+            context: base
+            should_build: ${{ needs.check-changes.outputs.trixie == 'true' }}
           - dockerfile: python/Dockerfile
             tag: python
             context: python
