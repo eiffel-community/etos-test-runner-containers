@@ -90,15 +90,15 @@ jobs:
       matrix:
         include:
           - dockerfile: base/debian/Dockerfile.bookworm
-            tag: debian_bookworm
+            tag: debian-bookworm
             context: base
             should_build: ${{ needs.check-changes.outputs.debian_bookworm == 'true' }}
           - dockerfile: base/debian/Dockerfile.bullseye
-            tag: debian_bullseye
+            tag: debian-bullseye
             context: base
             should_build: ${{ needs.check-changes.outputs.debian_bullseye == 'true' }}
           - dockerfile: base/ubuntu/Dockerfile.noble
-            tag: ubuntu_noble
+            tag: ubuntu-noble
             context: base
             should_build: ${{ needs.check-changes.outputs.ubuntu_noble == 'true' }}
           - dockerfile: python/Dockerfile
