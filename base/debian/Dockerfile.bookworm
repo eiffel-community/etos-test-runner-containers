@@ -31,6 +31,4 @@ RUN echo "eval \"\$(pyenv init -)\"" >> /home/etos/.bashrc && \
 	pip install --no-cache-dir -U pip
 
 COPY executor.sh /home/etos/executor.sh
-# testing CI, remove
-RUN echo 123
 ENTRYPOINT ["/home/etos/executor.sh"]
