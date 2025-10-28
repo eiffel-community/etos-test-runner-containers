@@ -14,6 +14,10 @@ jobs:
         uses: hadolint/hadolint-action@master
         with:
           dockerfile: base/debian/Dockerfile.bookworm
+      - name: Run hadolint for Base testrunner debian trixie
+        uses: hadolint/hadolint-action@master
+        with:
+          dockerfile: base/debian/Dockerfile.trixie
       - name: Run hadolint for Base testrunner ubuntu noble
         uses: hadolint/hadolint-action@master
         with:
@@ -36,6 +40,7 @@ jobs:
     outputs:
       debian_bookworm: ${{ steps.changes.outputs.debian_bookworm }}
       debian_bullseye: ${{ steps.changes.outputs.debian_bullseye }}
+      debian_trixie: ${{ steps.changes.outputs.debian_trixie }}
       ubuntu_noble: ${{ steps.changes.outputs.ubuntu_noble }}
       python: ${{ steps.changes.outputs.python }}
       go: ${{ steps.changes.outputs.go }}
@@ -52,6 +57,8 @@ jobs:
               - 'base/debian/Dockerfile.bookworm'
             debian_bullseye:
               - 'base/debian/Dockerfile.bullseye'
+            debian_trixie:
+              - 'base/debian/Dockerfile.trixie'
             ubuntu_noble:
               - 'base/ubuntu/Dockerfile.noble'
             python:
@@ -80,6 +87,10 @@ jobs:
             tag: debian_bullseye
             context: base
             should_build: ${{ needs.check-changes.outputs.debian_bullseye == 'true' }}
+          - dockerfile: base/debian/Dockerfile.trixie
+            tag: debian_trixie
+            context: base
+            should_build: ${{ needs.check-changes.outputs.debian_trixie == 'true' }}
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu_noble
             context: base
@@ -137,6 +148,10 @@ jobs:
             tag: debian-bullseye
             context: base
             should_build: ${{ needs.check-changes.outputs.debian_bullseye == 'true' }}
+          - dockerfile: base/debian/Dockerfile.trixie
+            tag: debian-trixie
+            context: base
+            should_build: ${{ needs.check-changes.outputs.debian_trixie == 'true' }}
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu-noble
             context: base
