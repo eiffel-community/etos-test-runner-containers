@@ -31,43 +31,10 @@ jobs:
         with:
           dockerfile: rust/Dockerfile
 
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      debian_bookworm: ${{ steps.changes.outputs.debian_bookworm }}
-      debian_bullseye: ${{ steps.changes.outputs.debian_bullseye }}
-      ubuntu_noble: ${{ steps.changes.outputs.ubuntu_noble }}
-      python: ${{ steps.changes.outputs.python }}
-      go: ${{ steps.changes.outputs.go }}
-      rust: ${{ steps.changes.outputs.rust }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Check for changes
-        uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            debian_bookworm:
-              - 'base/debian/Dockerfile.bookworm'
-            debian_bullseye:
-              - 'base/debian/Dockerfile.bullseye'
-            ubuntu_noble:
-              - 'base/ubuntu/Dockerfile.noble'
-            python:
-              - 'python/Dockerfile'
-              - 'base/Dockerfile.bookworm'
-            go:
-              - 'go/Dockerfile'
-              - 'base/Dockerfile.bookworm'
-            rust:
-              - 'rust/Dockerfile'
-              - 'base/Dockerfile.bookworm'
-
   build:
     # Run on all commits (PRs and main branch) to validate Dockerfiles can be built
     runs-on: ubuntu-latest
-    needs: [run-hadolint, check-changes]
+    needs: [run-hadolint]
 
     strategy:
       matrix:
@@ -75,40 +42,31 @@ jobs:
           - dockerfile: base/debian/Dockerfile.bookworm
             tag: debian_bookworm
             context: base
-            should_build: ${{ needs.check-changes.outputs.debian_bookworm == 'true' }}
           - dockerfile: base/debian/Dockerfile.bullseye
             tag: debian_bullseye
             context: base
-            should_build: ${{ needs.check-changes.outputs.debian_bullseye == 'true' }}
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu_noble
             context: base
-            should_build: ${{ needs.check-changes.outputs.ubuntu_noble == 'true' }}
           - dockerfile: python/Dockerfile
             tag: python
             context: python
-            should_build: ${{ needs.check-changes.outputs.python == 'true' }}
           - dockerfile: go/Dockerfile
             tag: go
             context: go
-            should_build: ${{ needs.check-changes.outputs.go == 'true' }}
           - dockerfile: rust/Dockerfile
             tag: rust
             context: rust
-            should_build: ${{ needs.check-changes.outputs.rust == 'true' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        if: matrix.should_build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        if: matrix.should_build
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
-        if: matrix.should_build
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
@@ -120,7 +78,7 @@ jobs:
     # Only run on push to main branch (PR merges) to push images to registry
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: [build, check-changes]
+    needs: [build]
 
     permissions:
       contents: read
@@ -132,36 +90,28 @@ jobs:
           - dockerfile: base/debian/Dockerfile.bookworm
             tag: debian-bookworm
             context: base
-            should_build: ${{ needs.check-changes.outputs.debian_bookworm == 'true' }}
           - dockerfile: base/debian/Dockerfile.bullseye
             tag: debian-bullseye
             context: base
-            should_build: ${{ needs.check-changes.outputs.debian_bullseye == 'true' }}
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu-noble
             context: base
-            should_build: ${{ needs.check-changes.outputs.ubuntu_noble == 'true' }}
           - dockerfile: python/Dockerfile
             tag: python
             context: python
-            should_build: ${{ needs.check-changes.outputs.python == 'true' }}
           - dockerfile: go/Dockerfile
             tag: go
             context: go
-            should_build: ${{ needs.check-changes.outputs.go == 'true' }}
           - dockerfile: rust/Dockerfile
             tag: rust
             context: rust
-            should_build: ${{ needs.check-changes.outputs.rust == 'true' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        if: matrix.should_build
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
-        if: matrix.should_build
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -169,7 +119,6 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        if: matrix.should_build
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/eiffel-community/etos-base-test-runner
@@ -178,11 +127,9 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        if: matrix.should_build
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
-        if: matrix.should_build
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
