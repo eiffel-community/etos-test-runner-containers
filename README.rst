@@ -13,6 +13,8 @@ Description
 
 This is where the Dockerfiles for the ETOS test runner is located.
 
+All ETOS test runner containers use UID/GID 3705 as the standard identifier for the ``etos`` user to ensure consistent file permissions across different environments.
+
 
 Contribute
 ==========
