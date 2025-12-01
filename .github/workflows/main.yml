@@ -1,5 +1,14 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      push_images:
+        description: 'Push images to registry'
+        required: true
+        type: boolean
+        default: false
 jobs:
   run-hadolint:
     runs-on: ubuntu-latest
@@ -75,8 +84,8 @@ jobs:
           build-args: ${{ matrix.build_args }}
 
   push:
-    # Only run on push to main branch (PR merges) to push images to registry
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # Push images to registry on push to main branch or when manually triggered with 'push_images: true'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.event.inputs.push_images)
     runs-on: ubuntu-latest
     needs: [build]
 
