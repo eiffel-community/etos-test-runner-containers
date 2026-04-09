@@ -13,30 +13,30 @@ jobs:
   run-hadolint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v6
 
       - name: Run hadolint for Base testrunner debian bullseye
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: base/debian/Dockerfile.bullseye
       - name: Run hadolint for Base testrunner debian bookworm
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: base/debian/Dockerfile.bookworm
       - name: Run hadolint for Base testrunner ubuntu noble
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: base/ubuntu/Dockerfile.noble
       - name: Run hadolint for Go
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: go/Dockerfile
       - name: Run hadolint for Python
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: python/Dockerfile
       - name: Run hadolint for Rust
-        uses: hadolint/hadolint-action@master
+        uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: rust/Dockerfile
 
@@ -69,13 +69,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
@@ -117,10 +117,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Log in to Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -128,17 +128,17 @@ jobs:
 
       - name: Extract metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ghcr.io/eiffel-community/etos-base-test-runner
           tags: |
             type=raw,value=${{ matrix.tag }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
