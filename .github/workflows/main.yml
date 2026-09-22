@@ -15,10 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Run hadolint for Base testrunner debian bullseye
-        uses: hadolint/hadolint-action@v3.3.0
-        with:
-          dockerfile: base/debian/Dockerfile.bullseye
       - name: Run hadolint for Base testrunner debian bookworm
         uses: hadolint/hadolint-action@v3.3.0
         with:
@@ -50,9 +46,6 @@ jobs:
         include:
           - dockerfile: base/debian/Dockerfile.bookworm
             tag: debian_bookworm
-            context: base
-          - dockerfile: base/debian/Dockerfile.bullseye
-            tag: debian_bullseye
             context: base
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu_noble
@@ -98,9 +91,6 @@ jobs:
         include:
           - dockerfile: base/debian/Dockerfile.bookworm
             tag: debian-bookworm
-            context: base
-          - dockerfile: base/debian/Dockerfile.bullseye
-            tag: debian-bullseye
             context: base
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu-noble
