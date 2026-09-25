@@ -23,6 +23,10 @@ jobs:
         uses: hadolint/hadolint-action@v3.3.0
         with:
           dockerfile: base/ubuntu/Dockerfile.noble
+      - name: Run hadolint for Base testrunner ubuntu resolute
+        uses: hadolint/hadolint-action@v3.3.0
+        with:
+          dockerfile: base/ubuntu/Dockerfile.resolute
       - name: Run hadolint for Go
         uses: hadolint/hadolint-action@v3.3.0
         with:
@@ -49,6 +53,9 @@ jobs:
             context: base
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu_noble
+            context: base
+          - dockerfile: base/ubuntu/Dockerfile.resolute
+            tag: ubuntu_resolute
             context: base
           - dockerfile: python/Dockerfile
             tag: python
@@ -94,6 +101,9 @@ jobs:
             context: base
           - dockerfile: base/ubuntu/Dockerfile.noble
             tag: ubuntu-noble
+            context: base
+          - dockerfile: base/ubuntu/Dockerfile.resolute
+            tag: ubuntu-resolute
             context: base
           - dockerfile: python/Dockerfile
             tag: python
